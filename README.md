@@ -1,5 +1,10 @@
 # Locadora-Git
 
+Usuários para teste:
+admin - 123456
+usuario - usuario 
+
+
 	O site "Locadora Haskell" possui o objetivo de  realizar locações de filmes, podendo cadastrar e listar Filmes e Clientes.
 	Este site será iniciado com a tela de Login, onde o usuário deverá inserir o login e senha correspondentes, se obtiver permissão, será direcionado para a tela principal (/menu), onde o usuário poderá navegar pelos menus, de acordo com sua permissão de usuário.
 	
