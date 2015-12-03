@@ -1,0 +1,10 @@
+body {
+       background-color: lavender;
+}
+
+label{
+    color:purple;
+    font-family: verdana;
+    font-size: 15px;
+}
+
