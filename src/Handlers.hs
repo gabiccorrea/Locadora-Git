@@ -38,6 +38,9 @@ postLoginR = do
             case usuario of
                 Just (Entity uid usr) -> do
                     setSession "_ID" (usuarioNome usr)
+                    case usuarioNome usr of
+                         "admin" -> do redirect MenuR
+                         _ -> do redirect MenuUsuarioR
                     redirect MenuR                         
                 Nothing -> do
                     setMessage $ [shamlet| Usuário não cadastrado |]
@@ -53,7 +56,8 @@ getInicioR = defaultLayout [whamlet|
    <h1 align="center"> Locadora Haskell
        <p> Controle de filmes e locações<br><br>
             <img src="http://markmeets.com/wp-content/uploads/2013/10/Movie-Releases.jpg"/><br>
-            <a href=@{MenuR}>Entrar no Site
+            <a href=@{MenuR}>Acesso Admin <br>
+            <a href=@{MenuUsuarioR}>Acesso Comum
 |]
 
 
@@ -115,12 +119,25 @@ getListarClienteR :: Handler Html
 getListarClienteR = do
              listaP <- runDB $ selectList [] [Asc ClienteNome]
              defaultLayout [whamlet|
-                 <body bgcolor="#F2EFFB">
-                 <h1>Clientes cadastrados:
-                 $forall Entity pid cliente <- listaP
-                      <a href=@{ClienteR pid}> #{clienteNome cliente} <br>
+                <div style="background-color:navy; padding: 10px;">
+                                <a href=@{MenuR} title="Menu" style="color:whitesmoke;"> Inicio /
+                                <a href="@{UsuarioR}" title="Usuarios Cadastrados" style="color:whitesmoke;"> Cadastro de Usuários  /   
+                                <a href="@{ListUserR}" title="Usuarios" style="color:whitesmoke;"> Usuários  /
+                                <a href=@{CadastroClienteR} title="Clientes Cadastro" style="color:whitesmoke;"> Cadastro de Cliente /
+                                <a href=@{CadastroFilmeR} title="Filmes Cadastro" style="color:whitesmoke;"> Cadastro de Filmes /
+                                <a href=@{LocacaoR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /   
+                                <a href=@{ListarFilmeR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
+                                <a href=@{ListarClienteR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
+                                <a href=@{AutorR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
+                                <a href="@{ByeR}" title="Logout da área restrita" style="color:whitesmoke;"> Sair
+                <div>                  
+                <div style="background-color:lavender;">
+                    <h1>Clientes cadastrados:
+                        $forall Entity pid cliente <- listaP
+                           <a href=@{ClienteR pid}> #{clienteNome cliente} <br>
 
-                <div style="margin-top: 50px;"><a href=@{MenuR} title="Voltar"> Voltar
+                    <div style="margin-top: 50px;"><a href=@{MenuR} title="Voltar"> Voltar
+                <div>
              |]
 
 
@@ -143,12 +160,21 @@ getListarClienteUsuarioR :: Handler Html
 getListarClienteUsuarioR = do
              listaP <- runDB $ selectList [] [Asc ClienteNome]
              defaultLayout [whamlet|
-                 <body bgcolor="#F2EFFB">
+                <div style="background-color:navy; padding: 10px;">
+                 <a href=@{MenuUsuarioR} title="Menu" style="color:whitesmoke;"> Inicio /  
+                                <a href=@{ListarFilmeUsuarioR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
+                                <a href=@{ListarClienteUsuarioR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
+                                <a href=@{LocacaoUsuarioR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /  
+                                <a href=@{AutorUsuarioR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
+                                <a href="@{ByeR}" title="Logout da área restrita" style="color:whitesmoke;"> Sair
+                <div style="background-color:lavender;">
                  <h1>Clientes cadastrados:
                  $forall Entity pid cliente <- listaP
                       <a href=@{ClienteUsuarioR pid}> #{clienteNome cliente} <br>
 
                 <div style="margin-top: 50px;"><a href=@{MenuUsuarioR} title="Voltar"> Voltar
+               <div>
+                
              |]
 
 
@@ -209,13 +235,27 @@ getListarFilmeR :: Handler Html
 getListarFilmeR = do
              listaP <- runDB $ selectList [] [Asc FilmeNome]
              defaultLayout [whamlet|
-                 <body bgcolor="#F2EFFB">
-                 <h1>Filmes cadastrados:
-                 $forall Entity pid filme <- listaP
-                     <a href=@{FilmeR pid}> #{filmeNome filme} <br>
+                <div style="background-color:navy; padding: 10px;">
+                                <a href=@{MenuR} title="Menu" style="color:whitesmoke;"> Inicio /
+                                <a href="@{UsuarioR}" title="Usuarios Cadastrados" style="color:whitesmoke;"> Cadastro de Usuários  /   
+                                <a href="@{ListUserR}" title="Usuarios" style="color:whitesmoke;"> Usuários  /
+                                <a href=@{CadastroClienteR} title="Clientes Cadastro" style="color:whitesmoke;"> Cadastro de Cliente /
+                                <a href=@{CadastroFilmeR} title="Filmes Cadastro" style="color:whitesmoke;"> Cadastro de Filmes /
+                                <a href=@{LocacaoR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /   
+                                <a href=@{ListarFilmeR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
+                                <a href=@{ListarClienteR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
+                                <a href=@{AutorR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
+                                <a href="@{ByeR}" title="Logout da área restrita" style="color:whitesmoke;"> Sair
+                <div>
+                <div style="background-color:lavender;">
+                       <h1>Filmes cadastrados:
+                        $forall Entity pid filme <- listaP
+                            <a href=@{FilmeR pid}> #{filmeNome filme} <br>
 
-                <div style="margin-top: 50px;"><a href=@{MenuR} title="Voltar"> Voltar
+                        <div style="margin-top: 50px;"><a href=@{MenuR} title="Voltar"> Voltar
                                                <a href=@{LocacaoR} title="Alugar"> Alugar
+                <div>
+                                                  
              |]
 
 
@@ -240,13 +280,22 @@ getListarFilmeUsuarioR :: Handler Html
 getListarFilmeUsuarioR = do
              listaP <- runDB $ selectList [] [Asc FilmeNome]
              defaultLayout [whamlet|
-                 <body bgcolor="#F2EFFB">
-                 <h1>Filmes cadastrados:
-                 $forall Entity pid filme <- listaP
-                     <a href=@{FilmeUsuarioR pid}> #{filmeNome filme} <br>
+                <div style="background-color:navy; padding: 10px;">
+                    <a href=@{MenuUsuarioR} title="Menu" style="color:whitesmoke;"> Inicio /  
+                                <a href=@{ListarFilmeUsuarioR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
+                                <a href=@{ListarClienteUsuarioR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
+                                <a href=@{LocacaoUsuarioR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /  
+                                <a href=@{AutorUsuarioR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
+                                <a href="@{ByeR}" title="Logout da área restrita" style="color:whitesmoke;"> Sair
+                 <div>
+                 <div style="background-color:lavender;">
+                    <h1>Filmes cadastrados:
+                        $forall Entity pid filme <- listaP
+                            <a href=@{FilmeUsuarioR pid}> #{filmeNome filme} <br>
 
-                <div style="margin-top: 50px;"><a href=@{MenuUsuarioR} title="Voltar"> Voltar
+                            <div style="margin-top: 50px;"><a href=@{MenuUsuarioR} title="Voltar"> Voltar
                                                <a href=@{LocacaoUsuarioR} title="Alugar"> Alugar
+                  <div>
              |]
 
 getFilmeUsuarioR :: FilmeId -> Handler Html
@@ -408,7 +457,7 @@ ww = toWidgetHead [hamlet|
                                 <a href="@{ListUserR}" title="Usuarios" style="color:whitesmoke;"> Usuários  /
                                 <a href=@{CadastroClienteR} title="Clientes Cadastro" style="color:whitesmoke;"> Cadastro de Cliente /
                                 <a href=@{CadastroFilmeR} title="Filmes Cadastro" style="color:whitesmoke;"> Cadastro de Filmes /
-                                <a href=@{LocacaoUsuarioR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /   
+                                <a href=@{LocacaoR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /   
                                 <a href=@{ListarFilmeR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
                                 <a href=@{ListarClienteR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
                                 <a href=@{AutorR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
@@ -528,28 +577,46 @@ getListUserR = do
 ----[SOBRE ADMIN]----
 getAutorR :: Handler Html
 getAutorR = defaultLayout [whamlet|
-    <body bgcolor="#F2EFFB">
-    <p><h1>Locadora Haskell
-       
+
+ <div style="background-color:navy; padding: 10px;">
+      <a href=@{MenuR} title="Menu" style="color:whitesmoke;"> Inicio /
+                                <a href="@{UsuarioR}" title="Usuarios Cadastrados" style="color:whitesmoke;"> Cadastro de Usuários  /   
+                                <a href="@{ListUserR}" title="Usuarios" style="color:whitesmoke;"> Usuários  /
+                                <a href=@{CadastroClienteR} title="Clientes Cadastro" style="color:whitesmoke;"> Cadastro de Cliente /
+                                <a href=@{CadastroFilmeR} title="Filmes Cadastro" style="color:whitesmoke;"> Cadastro de Filmes /
+                                <a href=@{LocacaoR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /   
+                                <a href=@{ListarFilmeR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
+                                <a href=@{ListarClienteR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
+                                <a href=@{AutorR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
+                                <a href="@{ByeR}" title="Logout da área restrita" style="color:whitesmoke;"> Sair
+    <div style="background-color:lavender;">
+      <p><h1>Locadora Haskell 
        <p> <h2>  Gabrielle Carvalho e Juliana Amparo <br> 
-
        <p> 2015
-
-    <a href=@{MenuR} title="Voltar"> Voltar
+      <a href=@{MenuR} title="Voltar"> Voltar
+    <div>
 |]
 
 ----[SOBRE ADMIN]----
 
 getAutorUsuarioR :: Handler Html
 getAutorUsuarioR = defaultLayout [whamlet|
-    <body bgcolor="#F2EFFB">
-    <p><h1>Locadora Haskell
+    <div style="background-color:navy; padding: 10px;">
+          <a href=@{MenuUsuarioR} title="Menu" style="color:whitesmoke;"> Inicio /  
+                                <a href=@{ListarFilmeUsuarioR} title="Filmes" style="color:whitesmoke;"> Listar Filmes /
+                                <a href=@{ListarClienteUsuarioR} title="Clientes" style="color:whitesmoke;"> Listar Clientes /   
+                                <a href=@{LocacaoUsuarioR} title="Locacao Cadastro" style="color:whitesmoke;"> Realizar Locacao /  
+                                <a href=@{AutorUsuarioR} title="Sobre" style="color:whitesmoke;"> Sobre  / 
+                                <a href="@{ByeR}" title="Logout da área restrita" style="color:whitesmoke;"> Sair
+
+
+    <div style="background-color:lavender;">
+      <p><h1>Locadora Haskell      
+         <p> <h2>  Gabrielle Carvalho e Juliana Amparo <br> 
+         <p> 2015
+      <a href=@{MenuUsuarioR} title="Voltar"> Voltar
+    <div>    
        
-       <p> <h2>  Gabrielle Carvalho e Juliana Amparo <br> 
-
-       <p> 2015
-
-    <a href=@{MenuUsuarioR} title="Voltar"> Voltar
 |]
 
 
